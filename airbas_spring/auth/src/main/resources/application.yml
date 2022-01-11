@@ -1,0 +1,42 @@
+security:
+  algorithm: rs512
+  jwtExpirationMs: 86400000
+  jwtSecret: airbasKey64
+  pswExtUser: externalUser
+
+spring:
+  datasource:
+    password: password
+    url: jdbc:postgresql://localhost:5432/springsocial
+    username: newuser
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        temp:
+          use_jdbc_metadata_defaults: false
+  mvc:
+    format:
+      date-time: iso
+  security:
+    oauth2:
+      client:
+        registration:
+          facebook:
+            clientId: 971220263486307
+            clientSecret: 6c7ae6ec410ac93dcb5bed645b436f07
+            scope: email, profile
+          google:
+            clientId: 207213984196-ooeq2mjv0ig9li3pmnj43o29s0nna2oo.apps.googleusercontent.com
+            clientSecret: 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
+            scope: email, profile
+          amazon:
+            clientId: amzn1.application-oa2-client.b8ff11881c0d4b8d8ea5568e2a7cb0a5
+            clientSecret: 7dba9f0b414cae39da3dcdcac61812c1a29b66d68d7392ec4e583170ffc75f71
+            scope: email, profile
