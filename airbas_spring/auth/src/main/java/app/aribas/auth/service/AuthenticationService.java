@@ -3,6 +3,7 @@ package app.aribas.auth.service;
 import app.aribas.auth.model.AuthProvider;
 import app.aribas.auth.model.ERole;
 import app.aribas.auth.model.UserBas;
+import app.aribas.auth.model.UserBasDetail;
 import app.aribas.auth.model.utils.LoginRequest;
 import app.aribas.auth.repo.UserBasRepository;
 import app.aribas.auth.security.JWTAuthenticationManager;
@@ -37,14 +38,23 @@ public class AuthenticationService {
         return userBasRepository.findAll();
     }
 
-    public void createUser(UserBas newUser, AuthProvider provider){
-        if (userBasRepository.findByEmail(newUser.getEmail()) != null)
+    public UserBas createUser(LoginRequest request, AuthProvider provider){
+        if (userBasRepository.findByEmail(request.getEmail()) != null)
             throw new IllegalArgumentException("Email already exists");
 
-        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+        UserBas newUser = new UserBas();
+        UserBasDetail detail = new UserBasDetail();
+        //necessario aggiornare entrambe le referenze
+        detail.setUserbas(newUser);
+
+        newUser.setEmail(request.getEmail());
+        newUser.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
         newUser.setRole(ERole.ROLE_USER);
         newUser.setProvider(provider);
+        newUser.setUserbasdetail(detail);
+
         userBasRepository.save(newUser);
+        return newUser;
     }
 
     public UserBas findUser(String email){
@@ -59,8 +69,8 @@ public class AuthenticationService {
             BadCredentialsException {
         if (findUser(credentials.getEmail()) == null)
             throw new IllegalArgumentException("Not registred");
-        System.out.println("authenticateUser " + credentials.getEmail());
-        System.out.println("authenticateUser " + credentials.getPassword());
+
+
         //TO-DO Gestire eccezione al login se ci si registra
         // Throws exception if user is not found or credentials are invalid
         try {

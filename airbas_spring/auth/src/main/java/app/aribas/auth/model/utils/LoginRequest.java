@@ -1,7 +1,10 @@
 package app.aribas.auth.model.utils;
 
+import lombok.ToString;
+
 import javax.validation.constraints.Email;
 
+@ToString
 public class LoginRequest {
     @Email
     private String email;

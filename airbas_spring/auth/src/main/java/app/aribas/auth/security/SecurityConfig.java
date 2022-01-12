@@ -37,14 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers("/auth/login").permitAll()
-                .antMatchers("/auth/signup").permitAll()
-                .antMatchers("/auth/users").permitAll()
+                .antMatchers("/auth/**").permitAll()
                 .antMatchers("/oauth/**").permitAll()
-                .antMatchers("/prenotation/test").authenticated()
+                .antMatchers("/profile/**").permitAll()
                 .anyRequest().authenticated();
-                //.and()
-                //.exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
-        //http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }

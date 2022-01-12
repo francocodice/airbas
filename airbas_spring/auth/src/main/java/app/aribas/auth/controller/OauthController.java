@@ -60,13 +60,9 @@ public class OauthController {
         final GoogleIdToken googleToken = GoogleIdToken.parse(verifier.getJsonFactory(), tokenGoogle.getValue());
         final GoogleIdToken.Payload payload = googleToken.getPayload();
 
-        UserBas currentUser = new UserBas();
         if(!authenticationService.exisitUser(payload.getEmail())){
-            currentUser.setEmail(payload.getEmail());
-            currentUser.setPassword(pswExtUser);
-            System.out.println(payload.get("name"));
-            currentUser.setUsername((String)payload.get("name"));
-            authenticationService.createUser(currentUser, AuthProvider.google);
+            LoginRequest credentials = new LoginRequest(payload.getEmail(), pswExtUser);
+            authenticationService.createUser(credentials, AuthProvider.google);
         }
 
         String jwt = authenticationService.authenticateUser(new LoginRequest(payload.getEmail(), pswExtUser));
@@ -82,13 +78,9 @@ public class OauthController {
         final String [] fields = {"email", "name"};
         User user = facebook.fetchObject("me", User.class, fields);
 
-        UserBas currentUser = new UserBas();
         if(!authenticationService.exisitUser(user.getEmail())){
-            currentUser.setEmail(user.getEmail());
-            currentUser.setPassword(pswExtUser);
-            currentUser.setUsername(user.getName());
-
-            authenticationService.createUser(currentUser, AuthProvider.facebook);
+            LoginRequest credentials = new LoginRequest(user.getEmail(), pswExtUser);
+            authenticationService.createUser(credentials, AuthProvider.facebook);
         }
 
         String jwt = authenticationService.authenticateUser(new LoginRequest(user.getEmail(), pswExtUser));
@@ -110,16 +102,12 @@ public class OauthController {
         String result = EntityUtils.toString(entity);
         Map<String,String> detailUser =
                 new ObjectMapper().readValue(result, HashMap.class);
-        System.out.println(detailUser);
 
-        UserBas currentUser = new UserBas();
         if(!authenticationService.exisitUser(detailUser.get("email"))){
-            currentUser.setEmail(detailUser.get("email"));
-            currentUser.setUsername(detailUser.get("name"));
-            currentUser.setPassword(pswExtUser);
-
-            authenticationService.createUser(currentUser, AuthProvider.github);
+            LoginRequest credentials = new LoginRequest(detailUser.get("email"), pswExtUser);
+            authenticationService.createUser(credentials, AuthProvider.amazon);
         }
+
 
         String jwt = authenticationService.authenticateUser(new LoginRequest(detailUser.get("email"), pswExtUser));
 
